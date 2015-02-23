@@ -1,0 +1,52 @@
+// Dependencies
+var express = require( 'express' ),
+	bodyParser = require( 'body-parser' ),
+	orm = require( 'orm' ),
+	config = require( './config.js' ),
+	pjson = require( './package.json' ),
+	cors = require( './cors.js' ),
+	app = express(),
+	api = express();
+
+// DB config
+var opts = {
+	database: config.db.schema,
+	protocol: "mysql",
+	host: config.db.host,
+	port: config.db.port,
+	user: config.db.user,
+	password: config.db.password,
+	query: {
+		pool: config.db.query.pool,
+		debug: config.db.query.debug,
+		strdates: config.db.query.strdates
+	}
+};
+
+// DB
+api.use( orm.express( opts, {
+	define: function ( db, models ) {
+		models.Personality = require( './model/personality.js' )( db );
+	}
+} ) );
+
+// routes
+app.use( bodyParser.json() )
+app.use( cors )
+require( './routes.js' )( api )
+app.use( config.api.basepath, api )
+app.get( '/version', function ( req, res ) {
+	res.send( pjson.version );
+} );
+
+
+// Start server
+var server = app.listen( config.server.port, function () {
+
+	var host = server.address().address
+	var port = server.address().port
+
+	console.log( 'App started and listening at http://%s:%s', host, port )
+
+} )
+
