@@ -5,7 +5,7 @@ CREATE TABLE `personality` (
 	`evaluations` int(11) DEFAULT 0,
 	`spontaneous_ack` int(11) DEFAULT 0,
 	`suggested_ack` int(11) DEFAULT 0,
-	UNIQUE KEY `project_code` (`project`, `code`, `evaluations`),
+	UNIQUE KEY `project_code` (`project`, `code`, `id`, `evaluations`),
 	KEY `evaluations` (`project`,`evaluations`),
 	KEY `spontaneous_ack` (`project`,`spontaneous_ack`),
 	KEY `suggested_ack` (`project`,`suggested_ack`),
